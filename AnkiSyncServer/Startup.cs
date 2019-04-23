@@ -74,6 +74,7 @@ namespace AnkiSyncServer
 
             app.UseHttpsRedirection();
             app.UseMiddleware<JwtBodyMiddleware>();
+            app.UseMiddleware<AnkiMiddleware>();
             app.UseAuthentication();
             app.UseMvc();
         }

@@ -15,7 +15,7 @@ using System.Text;
 namespace AnkiSyncServer.Controllers
 {
 
-    [Route("api/[controller]")]
+    [Route("sync/hostKey")]
     [ApiController]
     public class TokenController : ControllerBase
     {
@@ -54,7 +54,7 @@ namespace AnkiSyncServer.Controllers
 
                     return Ok(new
                     {
-                        token = new JwtSecurityTokenHandler().WriteToken(token)
+                        key = new JwtSecurityTokenHandler().WriteToken(token)
                     });
                 }
             }
