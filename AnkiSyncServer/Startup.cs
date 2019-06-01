@@ -18,7 +18,9 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using AnkiSyncServer.Middleware;
-using AnkiSyncServer.Data;
+using AnkiSyncServer.Models;
+using AnkiSyncServer.InputFormatters;
+using Pomelo.EntityFrameworkCore.MySql;
 
 namespace AnkiSyncServer
 {
@@ -34,11 +36,20 @@ namespace AnkiSyncServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
+            /*
+            services.AddDbContext<ApplicationIdentityDbContext>(options =>
                 options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+                */
+
+            services.AddDbContext<AnkiDbContext>(options =>
+                options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDefaultIdentity<ApplicationUser>()
+                .AddEntityFrameworkStores<AnkiDbContext>();
 
             services.AddMvc(o =>
             {
+                // o.InputFormatters.Insert(0, new RawRequestBodyInputFormatter());
                 var policy = new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
                     .Build();

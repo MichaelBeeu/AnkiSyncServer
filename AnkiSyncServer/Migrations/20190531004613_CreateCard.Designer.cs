@@ -3,14 +3,16 @@ using System;
 using AnkiSyncServer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AnkiSyncServer.Migrations
 {
     [DbContext(typeof(AnkiDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190531004613_CreateCard")]
+    partial class CreateCard
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -106,7 +108,7 @@ namespace AnkiSyncServer.Migrations
 
                     b.Property<int>("Type");
 
-                    b.Property<long>("UpdateSequenceNumber");
+                    b.Property<int>("UpdateSequenceNumber");
 
                     b.Property<string>("UserId");
 
@@ -119,10 +121,10 @@ namespace AnkiSyncServer.Migrations
 
             modelBuilder.Entity("AnkiSyncServer.Models.Collection", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<long>("ClientId");
+                    b.Property<int>("ClientId");
 
                     b.Property<string>("Conf");
 
@@ -144,7 +146,7 @@ namespace AnkiSyncServer.Migrations
 
                     b.Property<string>("Tags");
 
-                    b.Property<long>("UpdateSequenceNumber");
+                    b.Property<int>("UpdateSequenceNumber");
 
                     b.Property<string>("UserId");
 
@@ -155,90 +157,6 @@ namespace AnkiSyncServer.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Collections");
-                });
-
-            modelBuilder.Entity("AnkiSyncServer.Models.Grave", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long>("OriginalId");
-
-                    b.Property<int>("Type");
-
-                    b.Property<long>("UpdateSequenceNumber");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Graves");
-                });
-
-            modelBuilder.Entity("AnkiSyncServer.Models.Note", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long>("Checksum");
-
-                    b.Property<string>("Data");
-
-                    b.Property<string>("Fields");
-
-                    b.Property<long>("Flags");
-
-                    b.Property<Guid>("Guid");
-
-                    b.Property<long>("ModelId");
-
-                    b.Property<DateTime>("Modified");
-
-                    b.Property<string>("SortField");
-
-                    b.Property<string>("Tags");
-
-                    b.Property<long>("UpddateSequenceNumber");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Notes");
-                });
-
-            modelBuilder.Entity("AnkiSyncServer.Models.ReviewLog", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long>("CardId");
-
-                    b.Property<int>("Ease");
-
-                    b.Property<long>("Factor");
-
-                    b.Property<long>("Interval");
-
-                    b.Property<long>("LastInterval");
-
-                    b.Property<long>("Time");
-
-                    b.Property<int>("Type");
-
-                    b.Property<long>("UpdateSequenceNumber");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ReviewLogs");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -360,27 +278,6 @@ namespace AnkiSyncServer.Migrations
                 });
 
             modelBuilder.Entity("AnkiSyncServer.Models.Collection", b =>
-                {
-                    b.HasOne("AnkiSyncServer.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("AnkiSyncServer.Models.Grave", b =>
-                {
-                    b.HasOne("AnkiSyncServer.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("AnkiSyncServer.Models.Note", b =>
-                {
-                    b.HasOne("AnkiSyncServer.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("AnkiSyncServer.Models.ReviewLog", b =>
                 {
                     b.HasOne("AnkiSyncServer.Models.ApplicationUser", "User")
                         .WithMany()

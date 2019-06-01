@@ -3,14 +3,16 @@ using System;
 using AnkiSyncServer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AnkiSyncServer.Migrations
 {
     [DbContext(typeof(AnkiDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190601012349_CreateNote")]
+    partial class CreateNote
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -211,36 +213,6 @@ namespace AnkiSyncServer.Migrations
                     b.ToTable("Notes");
                 });
 
-            modelBuilder.Entity("AnkiSyncServer.Models.ReviewLog", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long>("CardId");
-
-                    b.Property<int>("Ease");
-
-                    b.Property<long>("Factor");
-
-                    b.Property<long>("Interval");
-
-                    b.Property<long>("LastInterval");
-
-                    b.Property<long>("Time");
-
-                    b.Property<int>("Type");
-
-                    b.Property<long>("UpdateSequenceNumber");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ReviewLogs");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -374,13 +346,6 @@ namespace AnkiSyncServer.Migrations
                 });
 
             modelBuilder.Entity("AnkiSyncServer.Models.Note", b =>
-                {
-                    b.HasOne("AnkiSyncServer.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("AnkiSyncServer.Models.ReviewLog", b =>
                 {
                     b.HasOne("AnkiSyncServer.Models.ApplicationUser", "User")
                         .WithMany()

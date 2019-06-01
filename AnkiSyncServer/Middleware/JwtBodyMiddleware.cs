@@ -30,7 +30,7 @@ namespace AnkiSyncServer.Middleware
                         context.Request.Headers["Authorization"] = "Bearer " + hkey;
                     }
                 }
-            } catch (InvalidOperationException e)
+            } catch (InvalidOperationException)
             {
                 // Do nothing...
             }
