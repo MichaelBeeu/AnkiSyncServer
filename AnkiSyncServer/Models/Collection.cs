@@ -14,17 +14,22 @@ namespace AnkiSyncServer.Models
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
         public DateTime CreationDate { get; set; }
+        [Column(TypeName = "DATETIME(3)")]
         public DateTime Modified { get; set; }
+        [Column(TypeName = "DATETIME(3)")]
         public DateTime SchemaModified { get; set; }
         public int Version { get; set; }
         public int Dirty { get; set; }
         public long UpdateSequenceNumber { get; set; }
+        [Column(TypeName = "DATETIME(3)")]
         public DateTime? LastSync { get; set; }
         public string Conf { get; set; }
         public string Models { get; set; }
         public string Decks { get; set; }
         public string DeckConf { get; set; }
         public string Tags { get; set; }
+        public DateTime MediaDirModified { get; set; }
+        public int MediaLastSync { get; set; }
 
         public Collection()
         {
@@ -40,6 +45,8 @@ namespace AnkiSyncServer.Models
             Decks = "[]";
             DeckConf = "[]";
             Tags = "[]";
+            MediaDirModified = DateTime.Now;
+            MediaLastSync = 0;
         }
     }
 }

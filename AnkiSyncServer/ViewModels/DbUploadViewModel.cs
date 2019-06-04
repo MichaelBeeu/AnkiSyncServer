@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
-namespace AnkiSyncServer.Models.AccountViewModels
+namespace AnkiSyncServer.ViewModels
 {
     public class DbUploadViewModel
     {

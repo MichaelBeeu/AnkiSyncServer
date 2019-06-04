@@ -3,14 +3,16 @@ using System;
 using AnkiSyncServer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AnkiSyncServer.Migrations
 {
     [DbContext(typeof(AnkiDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190601032955_AddClientIds")]
+    partial class AddClientIds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,10 +138,6 @@ namespace AnkiSyncServer.Migrations
 
                     b.Property<DateTime?>("LastSync");
 
-                    b.Property<DateTime>("MediaDirModified");
-
-                    b.Property<int>("MediaLastSync");
-
                     b.Property<string>("Models");
 
                     b.Property<DateTime>("Modified");
@@ -181,46 +179,6 @@ namespace AnkiSyncServer.Migrations
                     b.ToTable("Graves");
                 });
 
-            modelBuilder.Entity("AnkiSyncServer.Models.Media", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Checksum");
-
-                    b.Property<int>("Dirty");
-
-                    b.Property<string>("Filename");
-
-                    b.Property<DateTime>("Modified");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Media");
-                });
-
-            modelBuilder.Entity("AnkiSyncServer.Models.MediaMeta", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("DirectoryModified");
-
-                    b.Property<long>("LastUpdateSequenceNumber");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("MediaMeta");
-                });
-
             modelBuilder.Entity("AnkiSyncServer.Models.Note", b =>
                 {
                     b.Property<long>("Id")
@@ -236,7 +194,7 @@ namespace AnkiSyncServer.Migrations
 
                     b.Property<long>("Flags");
 
-                    b.Property<string>("Guid");
+                    b.Property<Guid>("Guid");
 
                     b.Property<long>("ModelId");
 
@@ -246,7 +204,7 @@ namespace AnkiSyncServer.Migrations
 
                     b.Property<string>("Tags");
 
-                    b.Property<long>("UpdateSequenceNumber");
+                    b.Property<long>("UpddateSequenceNumber");
 
                     b.Property<string>("UserId");
 
@@ -415,20 +373,6 @@ namespace AnkiSyncServer.Migrations
                 });
 
             modelBuilder.Entity("AnkiSyncServer.Models.Grave", b =>
-                {
-                    b.HasOne("AnkiSyncServer.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("AnkiSyncServer.Models.Media", b =>
-                {
-                    b.HasOne("AnkiSyncServer.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("AnkiSyncServer.Models.MediaMeta", b =>
                 {
                     b.HasOne("AnkiSyncServer.Models.ApplicationUser", "User")
                         .WithMany()

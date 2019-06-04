@@ -10,12 +10,13 @@ namespace AnkiSyncServer.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
+        public long ClientId { get; set; }
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
-        public Guid Guid { get; set; }
+        public string Guid { get; set; }
         public long ModelId { get; set; }
         public DateTime Modified { get; set; }
-        public long UpddateSequenceNumber { get; set; }
+        public long UpdateSequenceNumber { get; set; }
         public string Tags { get; set; }
         public string Fields { get; set; }
         public string SortField { get; set; }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using AnkiSyncServer.Models;
-using AnkiSyncServer.Models.AccountViewModels;
+using AnkiSyncServer.ViewModels;
 using Microsoft.AspNetCore.Identity;
 
 namespace AnkiSyncServer.Controllers

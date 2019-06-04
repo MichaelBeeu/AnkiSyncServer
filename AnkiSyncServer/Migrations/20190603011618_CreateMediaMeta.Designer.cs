@@ -3,14 +3,16 @@ using System;
 using AnkiSyncServer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AnkiSyncServer.Migrations
 {
     [DbContext(typeof(AnkiDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190603011618_CreateMediaMeta")]
+    partial class CreateMediaMeta
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -179,28 +181,6 @@ namespace AnkiSyncServer.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Graves");
-                });
-
-            modelBuilder.Entity("AnkiSyncServer.Models.Media", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Checksum");
-
-                    b.Property<int>("Dirty");
-
-                    b.Property<string>("Filename");
-
-                    b.Property<DateTime>("Modified");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Media");
                 });
 
             modelBuilder.Entity("AnkiSyncServer.Models.MediaMeta", b =>
@@ -415,13 +395,6 @@ namespace AnkiSyncServer.Migrations
                 });
 
             modelBuilder.Entity("AnkiSyncServer.Models.Grave", b =>
-                {
-                    b.HasOne("AnkiSyncServer.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-                });
-
-            modelBuilder.Entity("AnkiSyncServer.Models.Media", b =>
                 {
                     b.HasOne("AnkiSyncServer.Models.ApplicationUser", "User")
                         .WithMany()

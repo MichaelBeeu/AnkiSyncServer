@@ -24,7 +24,15 @@ namespace AnkiSyncServer.Middleware
                 {
 
                     // If a hostkey is passed, then pull it out of the form data, and move it to a bearer token.
-                    string hkey = form["k"];
+                    string hkey = null;
+                    if (form.ContainsKey("k"))
+                    {
+                        hkey = form["k"];
+                    } else if (form.ContainsKey("sk"))
+                    {
+                        hkey = form["sk"];
+                    }
+
                     if (!String.IsNullOrEmpty(hkey))
                     {
                         context.Request.Headers["Authorization"] = "Bearer " + hkey;

@@ -10,6 +10,7 @@ namespace AnkiSyncServer.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
+        public long ClientId { get; set; }
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
         public long CardId { get; set; }

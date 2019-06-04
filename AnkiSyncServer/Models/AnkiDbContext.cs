@@ -14,6 +14,8 @@ namespace AnkiSyncServer.Models
         public DbSet<Grave> Graves { get; set; }
         public DbSet<Note> Notes { get; set; }
         public DbSet<ReviewLog> ReviewLogs { get; set; }
+        public DbSet<MediaMeta> MediaMeta { get; set; }
+        public DbSet<Media> Media { get; set; }
 
         public AnkiDbContext(DbContextOptions<AnkiDbContext> options)
             : base(options)

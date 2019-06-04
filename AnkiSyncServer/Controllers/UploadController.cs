@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AnkiSyncServer.Syncer;
-using AnkiSyncServer.Models.AccountViewModels;
+using AnkiSyncServer.ViewModels;
 using AnkiSyncServer.Models;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
@@ -34,7 +34,7 @@ namespace AnkiSyncServer.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
             var syncer = new FullSyncer(_context);
-            await syncer.upload(user.Id, upload.Data);
+            await syncer.Upload(user.Id, upload.Data);
 
             return Ok();
         }

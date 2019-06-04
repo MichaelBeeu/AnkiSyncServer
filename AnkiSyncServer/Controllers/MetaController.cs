@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -33,22 +32,28 @@ namespace AnkiSyncServer.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var collection = await _context.Collections
                 .FirstOrDefaultAsync(c => c.User == user);
+            var media = await _context.MediaMeta
+                .FirstOrDefaultAsync(m => m.User == user);
 
             if (collection == null)
             {
                 collection = new Collection();
             }
-
-            Console.WriteLine(user);
-            Console.WriteLine(user.Id);
+            if (media == null)
+            {
+                media = new MediaMeta
+                {
+                    LastUpdateSequenceNumber = 1,
+                };
+            }
 
             return Ok(new
             {
-                scm = ((DateTimeOffset)collection.SchemaModified).ToUnixTimeSeconds(),
+                scm = ((DateTimeOffset)collection.SchemaModified).ToUnixTimeMilliseconds(),
                 ts = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                mod = ((DateTimeOffset)collection.Modified).ToUnixTimeSeconds(),
+                mod = ((DateTimeOffset)collection.Modified).ToUnixTimeMilliseconds(),
                 usn = collection.UpdateSequenceNumber,
-                musn = 0,
+                musn = media.LastUpdateSequenceNumber,
                 msg = "",
                 cont = true,
             });
