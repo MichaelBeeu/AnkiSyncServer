@@ -231,6 +231,7 @@ namespace AnkiSyncServer.Syncer
             return true;
         }
 
+        /*
         protected async Task<Boolean> CopyMetaFromClientData(string userId, SqliteConnection src, AnkiDbContext dest)
         {
             var existingMeta = dest.MediaMeta
@@ -244,5 +245,6 @@ namespace AnkiSyncServer.Syncer
 
             return false;
         }
+        */
     }
 }

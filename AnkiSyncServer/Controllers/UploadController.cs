@@ -18,14 +18,17 @@ namespace AnkiSyncServer.Controllers
     {
         private AnkiDbContext _context { get; set; }
         private UserManager<ApplicationUser> _userManager { get; set; }
+        private IFullSyncer _fullSyncer { get; set; }
 
         public UploadController(
             AnkiDbContext context,
-            UserManager<ApplicationUser> userManager
+            UserManager<ApplicationUser> userManager,
+            IFullSyncer fullSyncer
             )
         {
             _context = context;
             _userManager = userManager;
+            _fullSyncer = fullSyncer;
         }
 
         [HttpPost]
@@ -33,8 +36,7 @@ namespace AnkiSyncServer.Controllers
         {
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            var syncer = new FullSyncer(_context);
-            await syncer.Upload(user.Id, upload.Data);
+            await _fullSyncer.Upload(user.Id, upload.Data);
 
             return Ok();
         }

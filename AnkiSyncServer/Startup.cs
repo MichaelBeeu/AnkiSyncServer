@@ -21,6 +21,7 @@ using AnkiSyncServer.Middleware;
 using AnkiSyncServer.Models;
 using AnkiSyncServer.InputFormatters;
 using Pomelo.EntityFrameworkCore.MySql;
+using AnkiSyncServer.Syncer;
 
 namespace AnkiSyncServer
 {
@@ -73,6 +74,9 @@ namespace AnkiSyncServer
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
                     };
                 });
+
+            services.AddScoped<IFullSyncer, FullSyncer>();
+            services.AddScoped<IMediaSyncer, MediaSyncer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

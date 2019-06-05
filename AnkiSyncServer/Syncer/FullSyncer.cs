@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AnkiSyncServer.Syncer
 {
-    public partial class FullSyncer
+    public partial class FullSyncer : IFullSyncer
     {
         private AnkiDbContext _context { get; set; }
 
