@@ -39,11 +39,11 @@ namespace AnkiSyncServer.Controllers.Msync
             {
                 var media = _context.Media
                     .Where(me => me.User == user)
-                    .Select(med => new
+                    .Select(med => new object[]
                     {
-                        fname = med.Filename,
-                        mtime = ((DateTimeOffset)med.Modified).ToUnixTimeSeconds(),
-                        csum = med.Checksum,
+                        med.Filename,
+                        ((DateTimeOffset)med.Modified.ToLocalTime()).ToUnixTimeSeconds(),
+                        med.Checksum,
                     });
 
                 return Ok(new

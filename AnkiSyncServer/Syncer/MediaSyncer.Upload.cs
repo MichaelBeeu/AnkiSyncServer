@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AnkiSyncServer.Models;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,13 +8,15 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace AnkiSyncServer.Syncer
 {
-    public partial class MediaSyncer : IMediaSyncer
+    public partial class MediaSyncer
     {
-        public async Task<Boolean> Upload(IFormFile data)
+        public async Task<long> Upload(string userId, IFormFile data)
         {
+            long processed = 0;
             // Open the Zip archive we were sent, to get the meta file
             // containing the list of files we've been sent.
             using (var mediaStream = data.OpenReadStream())
@@ -38,26 +41,52 @@ namespace AnkiSyncServer.Syncer
                         if (String.IsNullOrEmpty(index))
                         {
                             // Delete old media entry
+                            var mediaRecord = await _mediaManager.RemoveFile(userId, fname);
+                            await DeleteMediaRecord(mediaRecord);
                         } else
                         {
-                            string tempFile = Path.GetTempFileName();
-                            Debug.WriteLine(tempFile);
-
                             var mediaFile = mediaArchive.GetEntry(index);
-                            mediaFile.ExtractToFile(tempFile, true);
-                            /*
-                            //using (var mediaFileStream = new StreamReader(mediaFile.Open()))
-                            using (var mediaFileStream = mediaFile.Open())
-                            using (var outputStream = new FileStream(tempFile, FileMode.Open))
-                            {
-                                await mediaFileStream.CopyToAsync(outputStream);
-                            }
-                            */
+                            var mediaRecord = await _mediaManager.AddFile(userId, fname, mediaFile);
+                            await UpdateMediaRecord(mediaRecord);
                         }
+
+                        processed++;
                     }
                 }
             }
-            return false;
+            return processed;
+        }
+
+        private async Task<Media> GetPreviousMedia(Media media)
+        {
+            return await _context.Media
+                .FirstOrDefaultAsync(m => m.UserId == media.UserId && m.Filename == media.Filename);
+        }
+
+        private async Task<Boolean> UpdateMediaRecord(Media media)
+        {
+            var previousMedia = await GetPreviousMedia(media);
+
+            if (previousMedia != null)
+            {
+                media.Id = previousMedia.Id;
+            }
+
+            _context.Media.Update(media);
+
+            return true;
+        }
+
+        private async Task<Boolean> DeleteMediaRecord(Media media)
+        {
+            var previousMedia = await GetPreviousMedia(media);
+
+            if (previousMedia != null)
+            {
+                _context.Media.Remove(previousMedia);
+            }
+
+            return true;
         }
     }
 }

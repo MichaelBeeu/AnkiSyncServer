@@ -49,9 +49,9 @@ namespace AnkiSyncServer.Controllers
 
             return Ok(new
             {
-                scm = ((DateTimeOffset)collection.SchemaModified).ToUnixTimeMilliseconds(),
+                scm = ((DateTimeOffset)collection.SchemaModified.ToLocalTime()).ToUnixTimeMilliseconds(),
                 ts = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-                mod = ((DateTimeOffset)collection.Modified).ToUnixTimeMilliseconds(),
+                mod = ((DateTimeOffset)collection.Modified.ToLocalTime()).ToUnixTimeMilliseconds(),
                 usn = collection.UpdateSequenceNumber,
                 musn = media.LastUpdateSequenceNumber,
                 msg = "",

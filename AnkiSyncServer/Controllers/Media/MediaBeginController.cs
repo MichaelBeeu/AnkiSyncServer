@@ -37,6 +37,7 @@ namespace AnkiSyncServer.Controllers.Msync
             {
                 meta = new MediaMeta
                 {
+                    User = user,
                     LastUpdateSequenceNumber = 1,
                 };
             }

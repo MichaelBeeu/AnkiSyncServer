@@ -22,6 +22,7 @@ using AnkiSyncServer.Models;
 using AnkiSyncServer.InputFormatters;
 using Pomelo.EntityFrameworkCore.MySql;
 using AnkiSyncServer.Syncer;
+using AnkiSyncServer.MediaManager;
 
 namespace AnkiSyncServer
 {
@@ -77,6 +78,7 @@ namespace AnkiSyncServer
 
             services.AddScoped<IFullSyncer, FullSyncer>();
             services.AddScoped<IMediaSyncer, MediaSyncer>();
+            services.AddScoped<IMediaManager, LocalMediaManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -8,6 +8,6 @@ namespace AnkiSyncServer.Syncer
 {
     public interface IMediaSyncer
     {
-        Task<Boolean> Upload(IFormFile data);
+        Task<long> Upload(string userId, IFormFile data);
     }
 }

@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\uploads\**" />
+    <Content Remove="wwwroot\uploads\**" />
+    <EmbeddedResource Remove="wwwroot\uploads\**" />
+    <None Remove="wwwroot\uploads\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Migrations\20190519215625_CreateCollection.cs" />
     <Compile Remove="Migrations\20190519215625_CreateCollection.Designer.cs" />
     <Compile Remove="Migrations\20190520010956_Collections.cs" />
@@ -39,6 +46,7 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>
