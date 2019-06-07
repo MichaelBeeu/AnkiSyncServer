@@ -9,5 +9,6 @@ namespace AnkiSyncServer.Syncer
     public interface IFullSyncer
     {
         Task<Boolean> Upload(string userId, IFormFile input);
+        Task<string> Download(string userId);
     }
 }

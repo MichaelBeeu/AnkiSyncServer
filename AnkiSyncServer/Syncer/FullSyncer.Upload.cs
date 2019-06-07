@@ -112,6 +112,7 @@ namespace AnkiSyncServer.Syncer
                             ClientId = (long)dr["id"],
                             UserId = userId,
                             NoteId = (long)dr["nid"],
+                            DeckId = (long)dr["did"],
                             Ordinal = (int)(long)dr["ord"],
                             Modified = DateTimeOffset.FromUnixTimeSeconds((long)dr["mod"]).UtcDateTime,
                             UpdateSequenceNumber = (int)(long)dr["usn"],

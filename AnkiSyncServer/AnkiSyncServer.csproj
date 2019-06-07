@@ -31,6 +31,8 @@
     <Compile Remove="Migrations\20190601011150_CreateGrave.Designer.cs" />
     <Compile Remove="Migrations\20190601012237_CreateNote.cs" />
     <Compile Remove="Migrations\20190601012237_CreateNote.Designer.cs" />
+    <Compile Remove="Migrations\20190606032438_FixSortFieldLong.cs" />
+    <Compile Remove="Migrations\20190606032438_FixSortFieldLong.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
