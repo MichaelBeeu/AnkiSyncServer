@@ -26,17 +26,17 @@ namespace AnkiSyncServer.Syncer
                 await db.OpenAsync();
 
                 await InitSchema(db);
-                await CopyCollections(userId, db);
-                await CopyNotes(userId, db);
-                await CopyCards(userId, db);
-                await CopyRevLogs(userId, db);
-                await CopyGraves(userId, db);
+                await CopyCollectionsToClientData(userId, db);
+                await CopyNotesToClientData(userId, db);
+                await CopyCardsToClientData(userId, db);
+                await CopyRevLogsToClientData(userId, db);
+                await CopyGravesToClientData(userId, db);
             }
 
             return dbFile;
         }
 
-        private async Task<Boolean> CopyCollections(string userId, SqliteConnection db)
+        private async Task<Boolean> CopyCollectionsToClientData(string userId, SqliteConnection db)
         {
             using (var cmd = db.CreateCommand())
             {
@@ -82,7 +82,7 @@ namespace AnkiSyncServer.Syncer
             return true;
         }
 
-        private async Task<Boolean> CopyNotes(string userId, SqliteConnection db)
+        private async Task<Boolean> CopyNotesToClientData(string userId, SqliteConnection db)
         {
             using (var cmd = db.CreateCommand())
             {
@@ -123,7 +123,7 @@ namespace AnkiSyncServer.Syncer
             }
             return true;
         }
-        private async Task<Boolean> CopyCards(string userId, SqliteConnection db)
+        private async Task<Boolean> CopyCardsToClientData(string userId, SqliteConnection db)
         {
             using (var cmd = db.CreateCommand())
             {
@@ -179,7 +179,7 @@ namespace AnkiSyncServer.Syncer
             return true;
         }
 
-        private async Task<Boolean> CopyRevLogs(string userId, SqliteConnection db)
+        private async Task<Boolean> CopyRevLogsToClientData(string userId, SqliteConnection db)
         {
             using (var cmd = db.CreateCommand())
             {
@@ -217,7 +217,7 @@ namespace AnkiSyncServer.Syncer
             return true;
         }
 
-        private async Task<Boolean> CopyGraves(string userId, SqliteConnection db)
+        private async Task<Boolean> CopyGravesToClientData(string userId, SqliteConnection db)
         {
             using (var cmd = db.CreateCommand())
             {
