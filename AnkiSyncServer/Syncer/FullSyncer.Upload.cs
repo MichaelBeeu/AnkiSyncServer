@@ -37,12 +37,13 @@ namespace AnkiSyncServer.Syncer
                 {
                     await db.OpenAsync();
 
-                    await CopyColFromClientData(userId, db, _context);
-                    await CopyCardsFromClientData(userId, db, _context);
-                    await CopyGravesFromClientData(userId, db, _context);
-                    await CopyNotesFromClientData(userId, db, _context);
-                    await CopyReviewLogsFromClientData(userId, db, _context);
-                    
+                    await CopyColFromClientData(userId, db);
+                    await CopyCardsFromClientData(userId, db);
+                    await CopyGravesFromClientData(userId, db);
+                    await CopyNotesFromClientData(userId, db);
+                    await CopyReviewLogsFromClientData(userId, db);
+
+                    await _context.SaveChangesAsync();
                 }
             }
             catch (Exception e)
@@ -58,11 +59,11 @@ namespace AnkiSyncServer.Syncer
             return false;
         }
 
-        protected async Task<Boolean> CopyColFromClientData(string userId, SqliteConnection src, AnkiDbContext dest)
+        protected async Task<Boolean> CopyColFromClientData(string userId, SqliteConnection src)
         {
-            var existingCollection = dest.Collections
+            var existingCollection = _context.Collections
                 .Where(collection => collection.UserId == userId);
-            dest.Collections.RemoveRange(existingCollection);
+            _context.Collections.RemoveRange(existingCollection);
 
             using (var cmd = src.CreateCommand())
             {
@@ -87,19 +88,18 @@ namespace AnkiSyncServer.Syncer
                             DeckConf = (string)dr["dconf"],
                             Tags = (string)dr["tags"],
                         });
-                    dest.Collections.AddRange(collections);
+                    _context.Collections.AddRange(collections);
                 }
             }
 
-            await dest.SaveChangesAsync();
             return true;
         }
 
-        protected async Task<Boolean> CopyCardsFromClientData(string userId, SqliteConnection src, AnkiDbContext dest)
+        protected async Task<Boolean> CopyCardsFromClientData(string userId, SqliteConnection src)
         {
-            var existingCards = dest.Cards
+            var existingCards = _context.Cards
                 .Where(card => card.UserId == userId);
-            dest.Cards.RemoveRange(existingCards);
+            _context.Cards.RemoveRange(existingCards);
 
             using (var cmd = src.CreateCommand())
             {
@@ -129,19 +129,18 @@ namespace AnkiSyncServer.Syncer
                             Flags = (int)(long)dr["flags"],
                             Data = (string)dr["data"],
                         });
-                    dest.Cards.AddRange(cards);
+                    _context.Cards.AddRange(cards);
                 }
             }
 
-            await dest.SaveChangesAsync();
             return true;
         }
 
-        protected async Task<Boolean> CopyGravesFromClientData(string userId, SqliteConnection src, AnkiDbContext dest)
+        protected async Task<Boolean> CopyGravesFromClientData(string userId, SqliteConnection src)
         {
-            var existingGraves = dest.Graves
+            var existingGraves = _context.Graves
                 .Where(grave => grave.UserId == userId);
-            dest.Graves.RemoveRange(existingGraves);
+            _context.Graves.RemoveRange(existingGraves);
 
             using (var cmd = src.CreateCommand())
             {
@@ -156,19 +155,18 @@ namespace AnkiSyncServer.Syncer
                             OriginalId = (long)dr["oid"],
                             Type = (GraveType)(long)dr["type"],
                         });
-                    dest.Graves.AddRange(graves);
+                    _context.Graves.AddRange(graves);
                 }
             }
 
-            await dest.SaveChangesAsync();
             return true;
         }
 
-        protected async Task<Boolean> CopyNotesFromClientData(string userId, SqliteConnection src, AnkiDbContext dest)
+        protected async Task<Boolean> CopyNotesFromClientData(string userId, SqliteConnection src)
         {
-            var existingNotes = dest.Notes
+            var existingNotes = _context.Notes
                 .Where(note => note.UserId == userId);
-            dest.Notes.RemoveRange(existingNotes);
+            _context.Notes.RemoveRange(existingNotes);
 
             using (var cmd = src.CreateCommand())
             {
@@ -191,19 +189,18 @@ namespace AnkiSyncServer.Syncer
                             Flags = (long)dr["flags"],
                             Data = (string)dr["data"],
                         });
-                    dest.Notes.AddRange(notes);
+                    _context.Notes.AddRange(notes);
                 }
             }
 
-            await dest.SaveChangesAsync();
             return true;
         }
 
-        protected async Task<Boolean> CopyReviewLogsFromClientData(string userId, SqliteConnection src, AnkiDbContext dest)
+        protected async Task<Boolean> CopyReviewLogsFromClientData(string userId, SqliteConnection src)
         {
-            var existingReviewLogs = dest.ReviewLogs
+            var existingReviewLogs = _context.ReviewLogs
                 .Where(reviewlog => reviewlog.UserId == userId);
-            dest.ReviewLogs.RemoveRange(existingReviewLogs);
+            _context.ReviewLogs.RemoveRange(existingReviewLogs);
 
             using (var cmd = src.CreateCommand())
             {
@@ -224,28 +221,11 @@ namespace AnkiSyncServer.Syncer
                             Time = (long)dr["time"],
                             Type = (ReviewType)(long)dr["type"],
                         });
-                    dest.ReviewLogs.AddRange(notes);
+                    _context.ReviewLogs.AddRange(notes);
                 }
             }
 
-            await dest.SaveChangesAsync();
             return true;
         }
-
-        /*
-        protected async Task<Boolean> CopyMetaFromClientData(string userId, SqliteConnection src, AnkiDbContext dest)
-        {
-            var existingMeta = dest.MediaMeta
-                .Where(meta => meta.UserId == userId);
-            dest.MediaMeta.RemoveRange(existingMeta);
-
-            using (var cmd = src.CreateCommand())
-            {
-                cmd.CommandText = "SELECT * FROM meta;";
-            }
-
-            return false;
-        }
-        */
     }
 }
