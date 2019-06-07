@@ -44,7 +44,8 @@ namespace AnkiSyncServer.MediaManager
             using (var hash = new SHA1Managed())
             {
                 await stream.CopyToAsync(dest);
-                var sha1 = hash.ComputeHash(stream);
+                dest.Seek(0, SeekOrigin.Begin);
+                var sha1 = hash.ComputeHash(dest);
                 return new Media
                 {
                     UserId = userId,
@@ -56,11 +57,11 @@ namespace AnkiSyncServer.MediaManager
             }
         }
 
-        public async Task<Stream> GetFile(string userId, string filename)
+        public async Task<Tuple<Stream, DateTime>> GetFile(string userId, string filename)
         {
             var mediaFilename = Path.Combine(GetUserMediaDirectory(userId), filename);
 
-            return new FileStream(mediaFilename, FileMode.Open);
+            return new Tuple<Stream, DateTime>(new FileStream(mediaFilename, FileMode.Open), File.GetLastWriteTimeUtc(mediaFilename));
         }
 
         public async Task<Media> RemoveFile(string userId, string filename)

@@ -11,7 +11,7 @@ namespace AnkiSyncServer.MediaManager
     public interface IMediaManager
     {
         Task<Media> AddFile(string userId, string filename, ZipArchiveEntry mediaEntry);
-        Task<Stream> GetFile(string userId, string filename);
+        Task<Tuple<Stream, DateTime>> GetFile(string userId, string filename);
         Task<Media> RemoveFile(string userId, string filename);
     }
 }

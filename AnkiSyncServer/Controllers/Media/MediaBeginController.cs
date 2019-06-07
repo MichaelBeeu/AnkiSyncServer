@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AnkiSyncServer.Controllers.Msync
 {
-    [Route("msync/begin")]
+    [Route("msync/[controller]")]
     [ApiController]
-    public class MediaBeginController : ControllerBase
+    public class BeginController : ControllerBase
     {
         private AnkiDbContext _context { get; set; }
         private UserManager<ApplicationUser> _userManager { get; set; }
 
-        public MediaBeginController(
+        public BeginController(
             AnkiDbContext context,
             UserManager<ApplicationUser> userManager
         ) {

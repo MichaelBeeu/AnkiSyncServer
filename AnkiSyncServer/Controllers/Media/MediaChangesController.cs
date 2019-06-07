@@ -42,7 +42,7 @@ namespace AnkiSyncServer.Controllers.Msync
                     .Select(med => new object[]
                     {
                         med.Filename,
-                        ((DateTimeOffset)med.Modified.ToLocalTime()).ToUnixTimeSeconds(),
+                        meta.LastUpdateSequenceNumber,
                         med.Checksum,
                     });
 

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -8,9 +7,9 @@ using System.Threading.Tasks;
 namespace AnkiSyncServer.ViewModels
 {
     [DataContract]
-    public class MediaChanges
+    public class MediaDownloadRequest
     {
-        [DataMember(Name = "lastUsn")]
-        public long LastUpdateSequenceNumber { get; set; }
+        [DataMember(Name="files")]
+        public List<string> Files { get; set; }
     }
 }
