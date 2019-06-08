@@ -14,6 +14,12 @@ namespace AnkiSyncServer.Syncer
 {
     public partial class MediaSyncer
     {
+        /// <summary>
+        /// Used to process file uploads from the client.
+        /// </summary>
+        /// <param name="userId">Used to indicate the owning user.</param>
+        /// <param name="data">Used to provide the client media archive.</param>
+        /// <returns>Returns the number of affected media files.</returns>
         public async Task<long> Upload(string userId, IFormFile data)
         {
             long processed = 0;
@@ -57,12 +63,22 @@ namespace AnkiSyncServer.Syncer
             return processed;
         }
 
+        /// <summary>
+        /// Gets the previously entered media file.
+        /// </summary>
+        /// <param name="media">Used to indicate the media file being requested.</param>
+        /// <returns>Returns the Media object of the file, or NULL</returns>
         private async Task<Media> GetPreviousMedia(Media media)
         {
             return await context.Media
                 .FirstOrDefaultAsync(m => m.UserId == media.UserId && m.Filename == media.Filename);
         }
 
+        /// <summary>
+        /// Create a new media record, or update an existing record.
+        /// </summary>
+        /// <param name="media">Used to indicate the media record.</param>
+        /// <returns>Returns sucess or failure.</returns>
         private async Task<Boolean> UpdateMediaRecord(Media media)
         {
             Media previousMedia = await GetPreviousMedia(media);
@@ -77,6 +93,11 @@ namespace AnkiSyncServer.Syncer
             return true;
         }
 
+        /// <summary>
+        /// Delete a given media record.
+        /// </summary>
+        /// <param name="media">Used to indicate the media record.</param>
+        /// <returns>Returns success or failure.</returns>
         private async Task<Boolean> DeleteMediaRecord(Media media)
         {
             Media previousMedia = await GetPreviousMedia(media);

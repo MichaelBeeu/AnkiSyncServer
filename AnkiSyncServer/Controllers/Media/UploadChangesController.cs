@@ -33,6 +33,12 @@ namespace AnkiSyncServer.Controllers.Media
             this.userManager = userManager;
             this.context = context;
         }
+        
+        /// <summary>
+        /// Process media upload form client.
+        /// </summary>
+        /// <param name="changes">Used to upload client media files.</param>
+        /// <returns>Returns the count of media files processed, and the current update sequence number.</returns>
         public async Task<IActionResult> UploadChanges([FromForm] UploadChanges changes)
         {
             ApplicationUser user = await userManager.GetUserAsync(HttpContext.User);

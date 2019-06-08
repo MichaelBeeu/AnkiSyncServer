@@ -37,6 +37,11 @@ namespace AnkiSyncServer.Controllers
             this.userManager = userManager;
         }
 
+        /// <summary>
+        /// Log in and distrubute host key.
+        /// </summary>
+        /// <param name="authUserRequest">Used to indicated client credentials.</param>
+        /// <returns>Returns JWT key, or BadRequest.</returns>
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginViewModel authUserRequest)

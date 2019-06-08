@@ -25,6 +25,10 @@ namespace AnkiSyncServer.Controllers.Msync
             this.userManager = userManager;
         }
 
+        /// <summary>
+        /// Begin media upload.
+        /// </summary>
+        /// <returns>Returns JSON response containing current media metadata, and session key.</returns>
         [HttpPost]
         public async Task<IActionResult> Begin()
         {

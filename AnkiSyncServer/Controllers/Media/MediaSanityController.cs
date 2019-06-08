@@ -25,6 +25,11 @@ namespace AnkiSyncServer.Controllers.Media
             this.userManager = userManager;
         }
 
+        /// <summary>
+        /// Check media integrity.
+        /// </summary>
+        /// <param name="mediaSanity">Used to indicated the client's media state.</param>
+        /// <returns>Returns OK or FAILED response after checking media integrity.</returns>
         [HttpPost]
         public async Task<IActionResult> MediaSanity([FromBody] MediaSanity mediaSanity)
         {

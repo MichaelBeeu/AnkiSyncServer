@@ -10,6 +10,12 @@ namespace AnkiSyncServer.Syncer
 {
     public partial class MediaSyncer
     {
+        /// <summary>
+        /// Provides an zip archive of the requested media files.
+        /// </summary>
+        /// <param name="userId">Used to indicate owning user.</param>
+        /// <param name="fileList">Used to indicate the list of requested files.</param>
+        /// <returns>Returns a stream of the media archive.</returns>
         public async Task<Stream> Download(string userId, List<string> fileList)
         {
             MemoryStream zipStream = new MemoryStream();

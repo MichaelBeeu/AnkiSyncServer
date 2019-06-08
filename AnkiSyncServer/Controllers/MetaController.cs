@@ -26,6 +26,10 @@ namespace AnkiSyncServer.Controllers
             this.userManager = userManager;
         }
 
+        /// <summary>
+        /// Get current metadata.
+        /// </summary>
+        /// <returns>Returns current database state.</returns>
         [HttpPost]
         public async Task<IActionResult> Index()
         {

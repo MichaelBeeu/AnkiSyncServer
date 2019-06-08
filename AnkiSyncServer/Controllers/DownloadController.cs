@@ -30,6 +30,10 @@ namespace AnkiSyncServer.Controllers
             this.fullSyncer = fullSyncer;
         }
         
+        /// <summary>
+        /// Download SQLite database of client data.
+        /// </summary>
+        /// <returns>Returns FileStreamResult of SQLite database of client data.</returns>
         [HttpPost]
         public async Task<IActionResult> Download()
         {

@@ -22,6 +22,11 @@ namespace AnkiSyncServer.Controllers
             this.userManager = userManager;
         }
 
+        /// <summary>
+        /// Used to register a user.
+        /// </summary>
+        /// <param name="model">Used to communicate desired user credentials.</param>
+        /// <returns>Returns Ok if user is created, or BadRequest.</returns>
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel model)

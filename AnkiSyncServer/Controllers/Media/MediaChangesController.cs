@@ -28,6 +28,11 @@ namespace AnkiSyncServer.Controllers.Msync
         }
 
 
+        /// <summary>
+        /// Returns a list of changed media files.
+        /// </summary>
+        /// <param name="mediaChanges">Used to indicate the client's current media status.</param>
+        /// <returns>Returns JSON response containing the list of changed media files.</returns>
         [HttpPost]
         public async Task<IActionResult> MediaChanges([FromBody] MediaChanges mediaChanges)
         {

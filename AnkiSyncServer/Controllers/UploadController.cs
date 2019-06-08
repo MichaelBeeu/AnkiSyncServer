@@ -31,6 +31,11 @@ namespace AnkiSyncServer.Controllers
             this.fullSyncer = fullSyncer;
         }
 
+        /// <summary>
+        /// Used to upload client database.
+        /// </summary>
+        /// <param name="upload">Used to communcate client database file.</param>
+        /// <returns>Returns Ok</returns>
         [HttpPost]
         public async Task<IActionResult> Upload([FromForm] DbUploadViewModel upload)
         {
