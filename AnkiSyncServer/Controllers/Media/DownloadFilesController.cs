@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AnkiSyncServer.Models;
@@ -16,23 +17,23 @@ namespace AnkiSyncServer.Controllers.Media
     [ApiController]
     public class DownloadFilesController : ControllerBase
     {
-        private IMediaSyncer _mediaSyncer;
-        private UserManager<ApplicationUser> _userManager { get; set; }
+        private IMediaSyncer mediaSyncer;
+        private UserManager<ApplicationUser> userManager;
 
         public DownloadFilesController(
             IMediaSyncer mediaSyncer,
             UserManager<ApplicationUser> userManager
         ) {
-            _mediaSyncer = mediaSyncer;
-            _userManager = userManager;
+            this.mediaSyncer = mediaSyncer;
+            this.userManager = userManager;
         }
 
         [HttpPost]
         public async Task<IActionResult> DownloadFiles(MediaDownloadRequest mediaRequest)
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
+            ApplicationUser user = await userManager.GetUserAsync(HttpContext.User);
 
-            var zipStream = await _mediaSyncer.Download(user.Id, mediaRequest.Files);
+            Stream zipStream = await mediaSyncer.Download(user.Id, mediaRequest.Files);
 
             return File(zipStream, "application/octet-stream");
         }

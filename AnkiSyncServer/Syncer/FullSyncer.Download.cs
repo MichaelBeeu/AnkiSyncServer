@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using AnkiSyncServer.Models;
+using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,14 +15,10 @@ namespace AnkiSyncServer.Syncer
         {
             var dbFile = Path.GetTempFileName();
 
-            Debug.WriteLine("-----");
-            Debug.WriteLine($"Temp Db File: {dbFile}");
-            Debug.WriteLine("-----");
-
-            var connectionStringBuilder = new SqliteConnectionStringBuilder();
+            SqliteConnectionStringBuilder connectionStringBuilder = new SqliteConnectionStringBuilder();
             connectionStringBuilder.DataSource = dbFile;
 
-            using (var db = new SqliteConnection(connectionStringBuilder.ToString()))
+            using (SqliteConnection db = new SqliteConnection(connectionStringBuilder.ToString()))
             {
                 await db.OpenAsync();
 
@@ -38,7 +35,7 @@ namespace AnkiSyncServer.Syncer
 
         private async Task<Boolean> CopyCollectionsToClientData(string userId, SqliteConnection db)
         {
-            using (var cmd = db.CreateCommand())
+            using (SqliteCommand cmd = db.CreateCommand())
             {
                 cmd.CommandText = @"INSERT INTO col (id, crt, mod, scm, ver, dty, usn, ls, conf, models, decks, dconf, tags)
                                     VALUES (@id, @crt, @mod, @scm, @ver, @dty, @usn, @ls, @conf, @models, @decks, @dconf, @tags);";
@@ -57,10 +54,10 @@ namespace AnkiSyncServer.Syncer
                 cmd.Parameters.Add("@dconf", SqliteType.Text);
                 cmd.Parameters.Add("@tags", SqliteType.Text);
 
-                var collections = _context.Collections
+                var collections = context.Collections
                     .Where(c => c.UserId == userId);
 
-                foreach (var collection in collections)
+                foreach (Collection collection in collections)
                 {
                     cmd.Parameters["@id"].Value = collection.ClientId;
                     cmd.Parameters["@crt"].Value = ((DateTimeOffset)collection.CreationDate.ToLocalTime()).ToUnixTimeSeconds();
@@ -84,7 +81,7 @@ namespace AnkiSyncServer.Syncer
 
         private async Task<Boolean> CopyNotesToClientData(string userId, SqliteConnection db)
         {
-            using (var cmd = db.CreateCommand())
+            using (SqliteCommand cmd = db.CreateCommand())
             {
                 cmd.CommandText = @"INSERT INTO notes (id, guid, mid, mod, usn, tags, flds, sfld, csum, flags, data)
                                     VALUES (@id, @guid, @mid, @mod, @usn, @tags, @flds, @sfld, @csum, @flags, @data);";
@@ -101,10 +98,10 @@ namespace AnkiSyncServer.Syncer
                 cmd.Parameters.Add("@flags", SqliteType.Integer);
                 cmd.Parameters.Add("@data", SqliteType.Text);
 
-                var notes = _context.Notes
+                var notes = context.Notes
                     .Where(n => n.UserId == userId);
 
-                foreach (var note in notes)
+                foreach (Note note in notes)
                 {
                     cmd.Parameters["@id"].Value = note.ClientId;
                     cmd.Parameters["@guid"].Value = note.Guid;
@@ -125,7 +122,7 @@ namespace AnkiSyncServer.Syncer
         }
         private async Task<Boolean> CopyCardsToClientData(string userId, SqliteConnection db)
         {
-            using (var cmd = db.CreateCommand())
+            using (SqliteCommand cmd = db.CreateCommand())
             {
                 cmd.CommandText = @"INSERT INTO cards (id, nid, did, ord, mod, usn, type, queue, due, ivl, factor, reps, lapses, left, odue, odid, flags, data)
                                     VALUES (@id, @nid, @did, @ord, @mod, @usn, @type, @queue, @due, @ivl, @factor, @reps, @lapses, @left, @odue, @odid, @flags, @data)";
@@ -149,10 +146,10 @@ namespace AnkiSyncServer.Syncer
                 cmd.Parameters.Add("@flags", SqliteType.Integer);
                 cmd.Parameters.Add("@data", SqliteType.Text);
 
-                var cards = _context.Cards
+                var cards = context.Cards
                     .Where(c => c.UserId == userId);
 
-                foreach (var card in cards)
+                foreach (Card card in cards)
                 {
                     cmd.Parameters["@id"].Value = card.ClientId;
                     cmd.Parameters["@nid"].Value = card.NoteId;
@@ -181,7 +178,7 @@ namespace AnkiSyncServer.Syncer
 
         private async Task<Boolean> CopyRevLogsToClientData(string userId, SqliteConnection db)
         {
-            using (var cmd = db.CreateCommand())
+            using (SqliteCommand cmd = db.CreateCommand())
             {
                 cmd.CommandText = @"INSERT INTO revlog (id, cid, usn, ease, ivl, lastIvl, factor, time, type)
                                     VALUES (@id, @cid, @usn, @ease, @ivl, @lastIvl, @factor, @time, @type)";
@@ -196,10 +193,10 @@ namespace AnkiSyncServer.Syncer
                 cmd.Parameters.Add("@time", SqliteType.Integer);
                 cmd.Parameters.Add("@type", SqliteType.Integer);
 
-                var revLogs = _context.ReviewLogs
+                var revLogs = context.ReviewLogs
                     .Where(r => r.UserId == userId);
 
-                foreach (var revLog in revLogs)
+                foreach (ReviewLog revLog in revLogs)
                 {
                     cmd.Parameters["@id"].Value = revLog.ClientId;
                     cmd.Parameters["@cid"].Value = revLog.CardId;
@@ -219,7 +216,7 @@ namespace AnkiSyncServer.Syncer
 
         private async Task<Boolean> CopyGravesToClientData(string userId, SqliteConnection db)
         {
-            using (var cmd = db.CreateCommand())
+            using (SqliteCommand cmd = db.CreateCommand())
             {
                 cmd.CommandText = @"INSERT INTO graves (usn, oid, type)
                                     VALUES (@usn, @oid, @type)";
@@ -228,10 +225,10 @@ namespace AnkiSyncServer.Syncer
                 cmd.Parameters.Add("@oid", SqliteType.Integer);
                 cmd.Parameters.Add("@type", SqliteType.Integer);
 
-                var graves = _context.Graves
+                var graves = context.Graves
                     .Where(g => g.UserId == userId);
 
-                foreach (var grave in graves)
+                foreach (Grave grave in graves)
                 {
                     cmd.Parameters["@usn"].Value = grave.UpdateSequenceNumber;
                     cmd.Parameters["@oid"].Value = grave.OriginalId;
@@ -245,7 +242,7 @@ namespace AnkiSyncServer.Syncer
 
         private async Task<Boolean> InitSchema(SqliteConnection db)
         {
-            using (var cmd = db.CreateCommand())
+            using (SqliteCommand cmd = db.CreateCommand())
             {
                 /* EWWWWWWWW */
                 cmd.CommandText = @"

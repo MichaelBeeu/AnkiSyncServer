@@ -14,38 +14,36 @@ namespace AnkiSyncServer.MediaManager
 {
     public class LocalMediaManager : IMediaManager
     {
-        private IConfiguration _config;
-        private IHostingEnvironment _environment;
+        private IConfiguration config;
+        private IHostingEnvironment environment;
 
         public LocalMediaManager(
             IConfiguration configuration,
             IHostingEnvironment environment)
         {
-            _config = configuration;
-            _environment = environment;
+            config = configuration;
+            this.environment = environment;
         }
 
         private string GetUserMediaDirectory(string userId)
         {
-            Debug.WriteLine(_environment.WebRootPath);
-            Debug.WriteLine(_config["Media:Directory"]);
-            return Path.Combine(_environment.WebRootPath, _config["Media:Directory"], userId);
+            return Path.Combine(environment.WebRootPath, config["Media:Directory"], userId);
         }
 
         public async Task<Media> AddFile(string userId, string filename, ZipArchiveEntry mediaEntry)
         {
-            var mediaDir = GetUserMediaDirectory(userId);
-            var mediaFilename = Path.Combine(mediaDir, filename);
+            string mediaDir = GetUserMediaDirectory(userId);
+            string mediaFilename = Path.Combine(mediaDir, filename);
 
             Directory.CreateDirectory(mediaDir);
 
-            using (var stream = mediaEntry.Open())
-            using (var dest = new FileStream(mediaFilename, FileMode.OpenOrCreate))
-            using (var hash = new SHA1Managed())
+            using (Stream stream = mediaEntry.Open())
+            using (FileStream dest = new FileStream(mediaFilename, FileMode.OpenOrCreate))
+            using (SHA1Managed hash = new SHA1Managed())
             {
                 await stream.CopyToAsync(dest);
                 dest.Seek(0, SeekOrigin.Begin);
-                var sha1 = hash.ComputeHash(dest);
+                byte[] sha1 = hash.ComputeHash(dest);
                 return new Media
                 {
                     UserId = userId,
@@ -59,14 +57,14 @@ namespace AnkiSyncServer.MediaManager
 
         public async Task<Tuple<Stream, DateTime>> GetFile(string userId, string filename)
         {
-            var mediaFilename = Path.Combine(GetUserMediaDirectory(userId), filename);
+            string mediaFilename = Path.Combine(GetUserMediaDirectory(userId), filename);
 
             return new Tuple<Stream, DateTime>(new FileStream(mediaFilename, FileMode.Open), File.GetLastWriteTimeUtc(mediaFilename));
         }
 
         public async Task<Media> RemoveFile(string userId, string filename)
         {
-            var mediaFilename = Path.Combine(GetUserMediaDirectory(userId), filename);
+            string mediaFilename = Path.Combine(GetUserMediaDirectory(userId), filename);
 
             File.Delete(mediaFilename);
 

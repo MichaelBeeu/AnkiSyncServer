@@ -23,7 +23,7 @@ namespace AnkiSyncServer.Middleware
 
         public async Task Invoke(HttpContext context)
         {
-            var request = context.Request;
+            HttpRequest request = context.Request;
             FormFile file = null;
 
             try
@@ -45,7 +45,7 @@ namespace AnkiSyncServer.Middleware
                 if (compression)
                 {
                     // GZipStream cannot be reused, so I need to copy the data out of it
-                    using (var gzipStream = new GZipStream(newBody, CompressionMode.Decompress))
+                    using (GZipStream gzipStream = new GZipStream(newBody, CompressionMode.Decompress))
                     {
                         newBody = new MemoryStream();
                         await gzipStream.CopyToAsync(newBody);

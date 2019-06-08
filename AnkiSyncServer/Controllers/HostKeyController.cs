@@ -22,10 +22,9 @@ namespace AnkiSyncServer.Controllers
     [ApiController]
     public class HostKeyController : ControllerBase
     {
-        private readonly IConfiguration _config;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
-        //private readonly IUserManager _userManager;
+        private readonly IConfiguration config;
+        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly UserManager<ApplicationUser> userManager;
 
         public HostKeyController(
             IConfiguration configuration,
@@ -33,19 +32,19 @@ namespace AnkiSyncServer.Controllers
             UserManager<ApplicationUser> userManager
         )
         {
-            _config = configuration;
-            _signInManager = signInManager;
-            _userManager = userManager;
+            config = configuration;
+            this.signInManager = signInManager;
+            this.userManager = userManager;
         }
 
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginViewModel authUserRequest)
         {
-            var user = await _userManager.FindByNameAsync(authUserRequest.Username);
+            ApplicationUser user = await userManager.FindByNameAsync(authUserRequest.Username);
             if (user != null)
             {
-                var result = await _signInManager.PasswordSignInAsync(user, authUserRequest.Password, isPersistent: false, lockoutOnFailure: true);
+                var result = await signInManager.PasswordSignInAsync(user, authUserRequest.Password, isPersistent: false, lockoutOnFailure: true);
                 if (result.Succeeded)
                 {
                     var claims = new[]
@@ -54,11 +53,11 @@ namespace AnkiSyncServer.Controllers
                         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                     };
 
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
-                    var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                    SymmetricSecurityKey key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Tokens:Key"]));
+                    SigningCredentials creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-                    var token = new JwtSecurityToken(_config["Tokens:Issuer"],
-                        _config["Tokens:Issuer"],
+                    JwtSecurityToken token = new JwtSecurityToken(config["Tokens:Issuer"],
+                        config["Tokens:Issuer"],
                         claims,
                         expires: DateTime.Now.AddMinutes(30),
                         signingCredentials: creds);

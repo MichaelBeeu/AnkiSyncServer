@@ -14,23 +14,23 @@ namespace AnkiSyncServer.Controllers.Msync
     [ApiController]
     public class BeginController : ControllerBase
     {
-        private AnkiDbContext _context { get; set; }
-        private UserManager<ApplicationUser> _userManager { get; set; }
+        private AnkiDbContext context;
+        private UserManager<ApplicationUser> userManager;
 
         public BeginController(
             AnkiDbContext context,
             UserManager<ApplicationUser> userManager
         ) {
-            _context = context;
-            _userManager = userManager;
+            this.context = context;
+            this.userManager = userManager;
         }
 
         [HttpPost]
         public async Task<IActionResult> Begin()
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
+            ApplicationUser user = await userManager.GetUserAsync(HttpContext.User);
 
-            var meta = await _context.MediaMeta
+            MediaMeta meta = await context.MediaMeta
                 .FirstOrDefaultAsync(m => m.User == user);
 
             if (meta == null)
@@ -42,8 +42,7 @@ namespace AnkiSyncServer.Controllers.Msync
                 };
             }
 
-            var form = HttpContext.Request.Form;
-            string hkey = form["k"];
+            string hkey = HttpContext.Request.Form["k"];
 
             return Ok(new
             {

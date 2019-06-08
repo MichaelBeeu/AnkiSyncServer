@@ -15,33 +15,30 @@ namespace AnkiSyncServer.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<ApplicationUser> userManager;
 
         public UsersController (UserManager<ApplicationUser> userManager)
         {
-            _userManager = userManager;
+            this.userManager = userManager;
         }
 
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
         {
-            var user = new ApplicationUser
+            ApplicationUser user = new ApplicationUser
             {
                 UserName = model.UserName,
                 Email = model.Email,
             };
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await userManager.CreateAsync(user, model.Password);
             
             if (result.Succeeded)
             {
                 return Ok();
             }
 
-            Console.WriteLine(result);
             return BadRequest(result);
-
-            //return BadRequest("Could not create new user");
         }
     }
 }

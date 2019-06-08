@@ -9,15 +9,15 @@ namespace AnkiSyncServer.Syncer
 {
     public partial class MediaSyncer : IMediaSyncer
     {
-        private IMediaManager _mediaManager;
-        private AnkiDbContext _context;
+        private IMediaManager mediaManager;
+        private AnkiDbContext context;
 
         public MediaSyncer(
             IMediaManager mediaManager,
             AnkiDbContext context
         ) {
-            _mediaManager = mediaManager;
-            _context = context;
+            this.mediaManager = mediaManager;
+            this.context = context;
         }
     }
 }

@@ -20,23 +20,23 @@ namespace AnkiSyncServer.Controllers.Media
     [ApiController]
     public class UploadChangesController : ControllerBase
     {
-        private IMediaSyncer _mediaSyncer { get; set; }
-        private UserManager<ApplicationUser> _userManager;
-        private AnkiDbContext _context;
+        private IMediaSyncer mediaSyncer;
+        private UserManager<ApplicationUser> userManager;
+        private AnkiDbContext context;
 
         public UploadChangesController(
             IMediaSyncer mediaSyncer,
             UserManager<ApplicationUser> userManager,
             AnkiDbContext context
         ) {
-            _mediaSyncer = mediaSyncer;
-            _userManager = userManager;
-            _context = context;
+            this.mediaSyncer = mediaSyncer;
+            this.userManager = userManager;
+            this.context = context;
         }
         public async Task<IActionResult> UploadChanges([FromForm] UploadChanges changes)
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            var meta = await _context.MediaMeta.FirstOrDefaultAsync(m => m.User == user);
+            ApplicationUser user = await userManager.GetUserAsync(HttpContext.User);
+            MediaMeta meta = await context.MediaMeta.FirstOrDefaultAsync(m => m.User == user);
 
             if (meta == null)
             {
@@ -48,13 +48,13 @@ namespace AnkiSyncServer.Controllers.Media
                 };
             }
 
-            var processedCount = await _mediaSyncer.Upload(user.Id, changes.Data);
+            long processedCount = await mediaSyncer.Upload(user.Id, changes.Data);
 
             meta.LastUpdateSequenceNumber += processedCount;
 
-            _context.MediaMeta.Update(meta);
+            context.MediaMeta.Update(meta);
 
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
             return Ok(new
             {

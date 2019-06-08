@@ -12,18 +12,18 @@ namespace AnkiSyncServer.Syncer
     {
         public async Task<Stream> Download(string userId, List<string> fileList)
         {
-            var zipStream = new MemoryStream();
-            using (var zipFile = new ZipArchive(zipStream, ZipArchiveMode.Create, true)) {
-                var meta = new Dictionary<int, string>();
+            MemoryStream zipStream = new MemoryStream();
+            using (ZipArchive zipFile = new ZipArchive(zipStream, ZipArchiveMode.Create, true)) {
+                Dictionary<long, string> meta = new Dictionary<long, string>();
 
-                foreach ((var filename, var idx) in fileList.Select((value, i) => (value, i)))
+                foreach ((string filename, long idx) in fileList.Select((value, i) => (value, i)))
                 {
-                    var entry = zipFile.CreateEntry(idx.ToString());
-                    (var media, var modifyTime) = await _mediaManager.GetFile(userId, filename);
+                    ZipArchiveEntry entry = zipFile.CreateEntry(idx.ToString());
+                    (Stream media, DateTime modifyTime) = await mediaManager.GetFile(userId, filename);
 
                     entry.LastWriteTime = (DateTimeOffset)modifyTime.ToLocalTime();
 
-                    using (var entryStream = entry.Open())
+                    using (Stream entryStream = entry.Open())
                     {
                         await media.CopyToAsync(entryStream);
                         meta[idx] = filename;
@@ -32,11 +32,11 @@ namespace AnkiSyncServer.Syncer
                     media.Close();
                 }
 
-                var jsonSerializer = new JsonSerializer();
+                JsonSerializer jsonSerializer = new JsonSerializer();
 
-                var metaEntry = zipFile.CreateEntry("_meta");
-                using (var entryStream = metaEntry.Open())
-                using (var entryStreamWriter = new StreamWriter(entryStream))
+                ZipArchiveEntry metaEntry = zipFile.CreateEntry("_meta");
+                using (Stream entryStream = metaEntry.Open())
+                using (StreamWriter entryStreamWriter = new StreamWriter(entryStream))
                 {
                     jsonSerializer.Serialize(entryStreamWriter, meta);
                 }

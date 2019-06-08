@@ -15,29 +15,29 @@ namespace AnkiSyncServer.Controllers.Msync
     [ApiController]
     public class MediaChangesController : ControllerBase
     {
-        AnkiDbContext _context { get; set; }
-        UserManager<ApplicationUser> _userManager { get; set; }
+        AnkiDbContext context;
+        UserManager<ApplicationUser> userManager;
 
         public MediaChangesController(
             AnkiDbContext context,
             UserManager<ApplicationUser> userManager
             )
         {
-            _context = context;
-            _userManager = userManager;
+            this.context = context;
+            this.userManager = userManager;
         }
 
 
         [HttpPost]
         public async Task<IActionResult> MediaChanges([FromBody] MediaChanges mediaChanges)
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            var meta = await _context.MediaMeta
+            ApplicationUser user = await userManager.GetUserAsync(HttpContext.User);
+            MediaMeta meta = await context.MediaMeta
                 .FirstOrDefaultAsync(m => m.User == user);
             
             if (mediaChanges.LastUpdateSequenceNumber == 0 || mediaChanges.LastUpdateSequenceNumber < meta.LastUpdateSequenceNumber)
             {
-                var media = _context.Media
+                var media = context.Media
                     .Where(me => me.User == user)
                     .Select(med => new object[]
                     {

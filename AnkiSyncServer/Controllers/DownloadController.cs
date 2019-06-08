@@ -15,9 +15,9 @@ namespace AnkiSyncServer.Controllers
     [ApiController]
     public class DownloadController : ControllerBase
     {
-        private AnkiDbContext _context { get; set; }
-        private UserManager<ApplicationUser> _userManager { get; set; }
-        private IFullSyncer _fullSyncer { get; set; }
+        private AnkiDbContext context;
+        private UserManager<ApplicationUser> userManager;
+        private IFullSyncer fullSyncer;
 
         public DownloadController(
             AnkiDbContext context,
@@ -25,19 +25,19 @@ namespace AnkiSyncServer.Controllers
             IFullSyncer fullSyncer
             )
         {
-            _context = context;
-            _userManager = userManager;
-            _fullSyncer = fullSyncer;
+            this.context = context;
+            this.userManager = userManager;
+            this.fullSyncer = fullSyncer;
         }
         
         [HttpPost]
         public async Task<IActionResult> Download()
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
+            ApplicationUser user = await userManager.GetUserAsync(HttpContext.User);
 
-            var dbFile = await _fullSyncer.Download(user.Id);
+            string dbFile = await fullSyncer.Download(user.Id);
 
-            var stream = new FileStream(dbFile, FileMode.Open);
+            FileStream stream = new FileStream(dbFile, FileMode.Open);
 
             return File(stream, "application/octet-stream");
         }

@@ -14,25 +14,25 @@ namespace AnkiSyncServer.Controllers
     [ApiController]
     public class MetaController : ControllerBase
     {
-        private AnkiDbContext _context { get; set; }
-        private UserManager<ApplicationUser> _userManager { get; set; }
+        private AnkiDbContext context;
+        private UserManager<ApplicationUser> userManager;
 
         public MetaController(
             AnkiDbContext context,
             UserManager<ApplicationUser> userManager
             )
         {
-            _context = context;
-            _userManager = userManager;
+            this.context = context;
+            this.userManager = userManager;
         }
 
         [HttpPost]
         public async Task<IActionResult> Index()
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            var collection = await _context.Collections
+            ApplicationUser user = await userManager.GetUserAsync(HttpContext.User);
+            Collection collection = await context.Collections
                 .FirstOrDefaultAsync(c => c.User == user);
-            var media = await _context.MediaMeta
+            MediaMeta media = await context.MediaMeta
                 .FirstOrDefaultAsync(m => m.User == user);
 
             if (collection == null)

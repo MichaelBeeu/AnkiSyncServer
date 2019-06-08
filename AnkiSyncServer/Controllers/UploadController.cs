@@ -16,9 +16,9 @@ namespace AnkiSyncServer.Controllers
     [ApiController]
     public class UploadController : ControllerBase
     {
-        private AnkiDbContext _context { get; set; }
-        private UserManager<ApplicationUser> _userManager { get; set; }
-        private IFullSyncer _fullSyncer { get; set; }
+        private AnkiDbContext context;
+        private UserManager<ApplicationUser> userManager;
+        private IFullSyncer fullSyncer;
 
         public UploadController(
             AnkiDbContext context,
@@ -26,17 +26,17 @@ namespace AnkiSyncServer.Controllers
             IFullSyncer fullSyncer
             )
         {
-            _context = context;
-            _userManager = userManager;
-            _fullSyncer = fullSyncer;
+            this.context = context;
+            this.userManager = userManager;
+            this.fullSyncer = fullSyncer;
         }
 
         [HttpPost]
         public async Task<IActionResult> Upload([FromForm] DbUploadViewModel upload)
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
+            ApplicationUser user = await userManager.GetUserAsync(HttpContext.User);
 
-            await _fullSyncer.Upload(user.Id, upload.Data);
+            await fullSyncer.Upload(user.Id, upload.Data);
 
             return Ok();
         }

@@ -43,7 +43,7 @@ namespace AnkiSyncServer.Syncer
                     await CopyNotesFromClientData(userId, db);
                     await CopyReviewLogsFromClientData(userId, db);
 
-                    await _context.SaveChangesAsync();
+                    await context.SaveChangesAsync();
                 }
             }
             catch (Exception e)
@@ -61,9 +61,9 @@ namespace AnkiSyncServer.Syncer
 
         protected async Task<Boolean> CopyColFromClientData(string userId, SqliteConnection src)
         {
-            var existingCollection = _context.Collections
+            var existingCollection = context.Collections
                 .Where(collection => collection.UserId == userId);
-            _context.Collections.RemoveRange(existingCollection);
+            context.Collections.RemoveRange(existingCollection);
 
             using (var cmd = src.CreateCommand())
             {
@@ -88,7 +88,7 @@ namespace AnkiSyncServer.Syncer
                             DeckConf = (string)dr["dconf"],
                             Tags = (string)dr["tags"],
                         });
-                    _context.Collections.AddRange(collections);
+                    context.Collections.AddRange(collections);
                 }
             }
 
@@ -97,9 +97,9 @@ namespace AnkiSyncServer.Syncer
 
         protected async Task<Boolean> CopyCardsFromClientData(string userId, SqliteConnection src)
         {
-            var existingCards = _context.Cards
+            var existingCards = context.Cards
                 .Where(card => card.UserId == userId);
-            _context.Cards.RemoveRange(existingCards);
+            context.Cards.RemoveRange(existingCards);
 
             using (var cmd = src.CreateCommand())
             {
@@ -129,7 +129,7 @@ namespace AnkiSyncServer.Syncer
                             Flags = (int)(long)dr["flags"],
                             Data = (string)dr["data"],
                         });
-                    _context.Cards.AddRange(cards);
+                    context.Cards.AddRange(cards);
                 }
             }
 
@@ -138,9 +138,9 @@ namespace AnkiSyncServer.Syncer
 
         protected async Task<Boolean> CopyGravesFromClientData(string userId, SqliteConnection src)
         {
-            var existingGraves = _context.Graves
+            var existingGraves = context.Graves
                 .Where(grave => grave.UserId == userId);
-            _context.Graves.RemoveRange(existingGraves);
+            context.Graves.RemoveRange(existingGraves);
 
             using (var cmd = src.CreateCommand())
             {
@@ -155,7 +155,7 @@ namespace AnkiSyncServer.Syncer
                             OriginalId = (long)dr["oid"],
                             Type = (GraveType)(long)dr["type"],
                         });
-                    _context.Graves.AddRange(graves);
+                    context.Graves.AddRange(graves);
                 }
             }
 
@@ -164,9 +164,9 @@ namespace AnkiSyncServer.Syncer
 
         protected async Task<Boolean> CopyNotesFromClientData(string userId, SqliteConnection src)
         {
-            var existingNotes = _context.Notes
+            var existingNotes = context.Notes
                 .Where(note => note.UserId == userId);
-            _context.Notes.RemoveRange(existingNotes);
+            context.Notes.RemoveRange(existingNotes);
 
             using (var cmd = src.CreateCommand())
             {
@@ -189,7 +189,7 @@ namespace AnkiSyncServer.Syncer
                             Flags = (long)dr["flags"],
                             Data = (string)dr["data"],
                         });
-                    _context.Notes.AddRange(notes);
+                    context.Notes.AddRange(notes);
                 }
             }
 
@@ -198,9 +198,9 @@ namespace AnkiSyncServer.Syncer
 
         protected async Task<Boolean> CopyReviewLogsFromClientData(string userId, SqliteConnection src)
         {
-            var existingReviewLogs = _context.ReviewLogs
+            var existingReviewLogs = context.ReviewLogs
                 .Where(reviewlog => reviewlog.UserId == userId);
-            _context.ReviewLogs.RemoveRange(existingReviewLogs);
+            context.ReviewLogs.RemoveRange(existingReviewLogs);
 
             using (var cmd = src.CreateCommand())
             {
@@ -221,7 +221,7 @@ namespace AnkiSyncServer.Syncer
                             Time = (long)dr["time"],
                             Type = (ReviewType)(long)dr["type"],
                         });
-                    _context.ReviewLogs.AddRange(notes);
+                    context.ReviewLogs.AddRange(notes);
                 }
             }
 
