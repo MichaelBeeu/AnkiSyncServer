@@ -12,6 +12,8 @@ using AnkiSyncServer.Models;
 using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 using System.Data;
+using Newtonsoft.Json;
+using AnkiSyncServer.Models.CollectionData;
 
 namespace AnkiSyncServer.Syncer
 {
@@ -84,7 +86,7 @@ namespace AnkiSyncServer.Syncer
                             LastSync = dr["ls"] != null ? (DateTime?)DateTimeOffset.FromUnixTimeMilliseconds((long)dr["ls"]).UtcDateTime : null,
                             Conf = (string)dr["conf"],
                             Models = (string)dr["models"],
-                            Decks = (string)dr["decks"],
+                            Decks = JsonConvert.DeserializeObject<Dictionary<long, Deck>>((string)dr["decks"]),
                             DeckConf = (string)dr["dconf"],
                             Tags = (string)dr["tags"],
                         });

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using AnkiSyncServer.Models.CollectionData;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace AnkiSyncServer.Models
 {
@@ -25,7 +27,8 @@ namespace AnkiSyncServer.Models
         public DateTime? LastSync { get; set; }
         public string Conf { get; set; }
         public string Models { get; set; }
-        public string Decks { get; set; }
+        public Dictionary<long, Deck> Decks { get; set; }
+        //public string Decks { get; set; }
         public string DeckConf { get; set; }
         public string Tags { get; set; }
         public DateTime MediaDirModified { get; set; }
@@ -42,7 +45,9 @@ namespace AnkiSyncServer.Models
             LastSync = null;
             Conf = "[]";
             Models = "[]";
-            Decks = "[]";
+            //Decks = "[]";
+            //Decks = new Dictionary<long, Deck>();
+            Decks = new Dictionary<long, Deck>();
             DeckConf = "[]";
             Tags = "[]";
             MediaDirModified = DateTime.Now;

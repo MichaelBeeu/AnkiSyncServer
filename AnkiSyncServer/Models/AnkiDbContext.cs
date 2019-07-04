@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using AnkiSyncServer.Models.EntityTypeConfiguration;
 
 namespace AnkiSyncServer.Models
 {
@@ -25,6 +26,7 @@ namespace AnkiSyncServer.Models
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.ApplyConfiguration(new CollectionsConfiguration());
 
             base.OnModelCreating(builder);
         }
