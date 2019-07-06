@@ -7,10 +7,9 @@ namespace IntegrationTest
 {
     public abstract class AbstractDataFixture : IDisposable
     {
-        virtual public void SaveData(DbContext context)
+        virtual public void AddData(DbContext context)
         {
             context.AddRange(GetData());
-            context.SaveChanges();
         }
 
         virtual public IEnumerable<object> GetData()

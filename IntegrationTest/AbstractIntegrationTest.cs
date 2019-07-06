@@ -20,27 +20,24 @@ namespace CollectionManager.Test
                 .UseInMemoryDatabase(databaseName: $"{TestContext.FullyQualifiedTestClassName}.{TestContext.TestName}")
                 .Options;
 
+            // Add any fixtures needed for the test
             using (Context context = (Context)Activator.CreateInstance(typeof(Context), DbContextOptions))
             {
+                // Get the attribute data
                 MethodBase method = this.GetType().GetMethod(TestContext.TestName);
                 WithFixture[] fixtures = (WithFixture[])Attribute.GetCustomAttributes(method, typeof(WithFixture));
 
                 foreach (var fixtureType in fixtures)
                 {
+                    // Save fixture data to database
                     using (var fixture = (AbstractDataFixture)Activator.CreateInstance(fixtureType.fixture))
                     {
-                        fixture.SaveData(context);
+                        fixture.AddData(context);
                     }
                 }
-            }
 
-            /*
-            using (Context context = (Context)Activator.CreateInstance(typeof(Context), DbContextOptions))
-            {
-                context.AddRange(GetFixtureData());
                 context.SaveChanges();
             }
-            */
         }
 
         virtual public IEnumerable<object> GetFixtureData()
