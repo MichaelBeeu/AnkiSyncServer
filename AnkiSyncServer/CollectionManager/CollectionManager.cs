@@ -32,15 +32,17 @@ namespace AnkiSyncServer.CollectionManager
         public async Task<long> RemoveNotes(List<long> noteIds)
         {
             var notes = context.Notes
-                .Where(n => noteIds.Contains(n.Id));
+                .Where(n => noteIds.Contains(n.ClientId) && n.UserId == collection.UserId);
 
             await LogRemovals(noteIds, GraveType.Note);
 
-            await context.SaveChangesAsync();
-
             context.RemoveRange(notes);
 
-            return notes.Count();
+            long notesCount = notes.Count();
+
+            await context.SaveChangesAsync();
+
+            return notesCount;
         }
 
         /// <summary>
@@ -52,7 +54,7 @@ namespace AnkiSyncServer.CollectionManager
         public async Task<long> RemoveCards(List<long> cardIds)
         {
             var cards = context.Cards
-                .Where(c => cardIds.Contains(c.Id));
+                .Where(c => cardIds.Contains(c.Id) && c.UserId == collection.UserId);
 
             var noteIds = cards.Select(c => c.NoteId).ToList<long>();
 
@@ -60,9 +62,11 @@ namespace AnkiSyncServer.CollectionManager
 
             context.RemoveRange(cards);
 
-            long numNotesRemoved = await RemoveNotes(noteIds);
+            long cardsCount = cards.Count();
 
-            return cards.Count() + numNotesRemoved;
+            long notesCount = await RemoveNotes(noteIds);
+
+            return cardsCount + notesCount;
         }
         
         /// <summary>

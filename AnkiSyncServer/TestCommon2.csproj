@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <ProjectTypeGuids></ProjectTypeGuids>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AnkiSyncServer\AnkiSyncServer.csproj" />
-    <ProjectReference Include="..\IntegrationTest\IntegrationTest.csproj" />
   </ItemGroup>
 
 </Project>
